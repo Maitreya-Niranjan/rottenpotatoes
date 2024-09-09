@@ -1,10 +1,80 @@
+<style>
+    .bt
+    {
+        margin-left: auto;
+        margin-right: auto;
+        background-color:  #cdff99;
+        border: 1px solid black;
+        width: 55%;
+        text-align: center;
+        padding: 10px;
+    }
+
+
+    .del1
+    {
+        border: none;
+        margin: 30px;
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #194d19;
+        color: white;
+    }
+
+    .del1:hover
+    {
+        background-color: #e0e0d1;
+    }
+
+    .del2
+    {
+        border: none;
+        margin: 30px;
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #FF0000;
+    }
+    .del2:hover
+    {
+        background-color: #e0e0d1;
+    }
+
+    .del3
+    {
+        border: none;
+        margin: 30px;
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #194d19;
+        color: white;
+    }
+    .del3:hover
+    {
+        background-color: 	 #e0e0d1;
+    }
+</style>
+
 <p style="color: green"><%= notice %></p>
+<div class="bt">
+    <%= render @movie %>
+    <br>
 
-<%= render @movie %>
+    
+    <%= link_to "Back to movies", movies_path , class: "del1"%>
 
-<div>
-  <%= link_to "Edit this movie", edit_movie_path(@movie) %> |
-  <%= link_to "Back to movies", movies_path %>
-
-  <%= button_to "Destroy this movie", @movie, method: :delete %>
+    <%= button_to "Destroy this movie", @movie, method: :delete , class: "del2"%>
+    <%= link_to "Edit this movie", edit_movie_path(@movie), class: "del3" %> 
+  
 </div>

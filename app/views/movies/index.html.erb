@@ -1,16 +1,258 @@
+<style>
+    .main
+    {
+        margin-left: 600px;
+        width: 75%;
+        padding: 5px;
+    }
+
+    .place
+    {
+        margin-top:-400px;
+        margin-left:100px;
+        width: 25%;       
+        margin-bottom: 20px;
+    }
+
+    #movies 
+    {
+        width: 50%;
+        border-collapse: collapse;
+        font-size: 18px;
+    }
+    #movies th, #movies td 
+    {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+    #movies th 
+    {
+        background-color: #1a3300;
+        color: white;
+    }
+
+
+    #movies td
+    {
+        text-align: center;
+    }
+
+    #movies tfoot td 
+    {
+        font-weight: bold;
+        background-color: #f9f9f9;
+        padding: 10px;
+    }
+
+    h1
+    {
+        text-align: center;
+    }
+
+    .button1 
+    {
+        border: none;
+        margin-left: 300px;
+        padding: 5px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #194d19;
+        color: white;
+    }
+    .button1:hover
+    {
+        background-color: #e0e0d1;
+    }
+
+   
+
+    .color-asc{background-color: #d4edda;}
+
+    .color-desc {background-color: #f8d7da;}
+</style>
+
 <p style="color: green"><%= notice %></p>
+
 
 <% content_for :title, "Movies" %>
 
 <h1>Movies</h1>
 
-<div id="movies">
-  <% @movies.each do |movie| %>
-    <%= render movie %>
-    <p>
-      <%= link_to "Show this movie", movie %>
-    </p>
-  <% end %>
-</div>
+<body>
+    <div class="main">
+        <table id="movies">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Rating</th>
+                    <th>Release Date</th>
+                </tr>
+            </thead>
+            <tbody id="movies-body">
+                <!-- Movie rows will be inserted here dynamically -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total Movies</td>
+                    <td id="total-movies">0</td>
+                </tr>
+            </tfoot>
+        </table>
+        <br/>
 
-<%= link_to "New movie", new_movie_path %>
+    
+        <%= link_to "New movie", new_movie_path, class: "button1" %>
+    </div>
+    <div class="place">
+        <label for="column">Choose column</label>
+        <select name="column", id="column">
+            <option value="" selected disabled hidden>Choose here</option>
+            <option value="title">Title</option>
+            <option value="rating">Rating</option>
+            <option value="release_date">Release Date</option>
+        </select>
+
+        <label for="order">Choose order</label>
+        <select name="order", id="order">
+            <option value="" selected disabled hidden>Choose sort order</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+        <p>
+            The color for ascending order is: 
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: #d4edda; border: 1px solid #000;"></span>
+        </p>
+        <p>
+            The color for descending order is: 
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: #f8d7da; border: 1px solid #000;"></span>
+        </p>
+        <p id = "output"></p>
+    </div>
+
+  
+
+
+    <script>
+        var selectedColumn=localStorage.getItem('selectedColumn') || '';
+        var selectedOrder=localStorage.getItem('selectedOrder') || '';
+        var movies = <%= raw @movies.to_json %>;
+        var hash = new Object();
+        hash['title'] = 'Title';
+        hash['rating'] = 'Rating'
+        hash['release_date'] = 'Release Date';
+        hash['asc'] = 'Ascending';
+        hash['desc'] = 'Descending';
+
+        function renderMovies() 
+        {   
+            var output = "Column selected: " + hash[selectedColumn] + "<br>Order selected: " + hash[selectedOrder];
+            document.getElementById("output").innerHTML = output;
+            var tbody=document.getElementById('movies-body');
+            tbody.innerHTML = ''; 
+
+            movies.forEach(function(movie) 
+            {
+                var row=document.createElement('tr');
+                
+                var titleCell=document.createElement('td');
+                titleCell.innerHTML='<a href="/movies/' + movie.id + '">' + movie.title + '</a>';
+                row.appendChild(titleCell);
+
+                var ratingCell = document.createElement('td');
+                ratingCell.innerText=movie.rating;
+                row.appendChild(ratingCell);
+
+                var releaseDateCell = document.createElement('td');
+                releaseDateCell.innerText=movie.release_date;
+                row.appendChild(releaseDateCell);
+
+                tbody.appendChild(row);
+            });
+            document.getElementById('total-movies').innerText = movies.length;
+            colorCodeRows(selectedColumn, selectedOrder);
+        }
+
+        function sortMovies(column, order) 
+        {
+            movies.sort(function(a, b) 
+            {
+                if (a[column] < b[column]) return (order === 'asc' ? -1 : 1);
+                if (a[column] > b[column]) return (order === 'asc' ? 1 : -1);
+                return 0;
+            });
+            
+            renderMovies(); 
+            
+        }
+
+        function handleDropdownChange(event) 
+        {
+            var selectedValue = event.target.value;
+
+            if (event.target.id === 'column') 
+            {
+                selectedColumn = selectedValue;
+                localStorage.setItem('selectedColumn', selectedValue);
+            } else if (event.target.id === 'order') 
+            {
+                selectedOrder = selectedValue;
+                localStorage.setItem('selectedOrder', selectedValue);
+            }
+
+            if (selectedColumn !== "" && selectedOrder !== "") 
+            {
+                sortMovies(selectedColumn, selectedOrder);
+            }
+        }
+
+
+        function colorCodeRows(column, order) 
+        {
+            var rows = document.querySelectorAll('#movies-body tr');
+            arr=["title","rating", "release_date"]
+            pos = arr.indexOf(column)
+            rows.forEach(function(row) 
+            {
+                cols = row.children[pos]
+                cols.classList.remove('color-asc', 'color-desc');
+                if (order === 'asc') {
+                    cols.classList.add('color-asc');
+                } else if (order === 'desc') {
+                    cols.classList.add('color-desc');
+                }
+            });
+        }
+
+
+        var mySelect = document.getElementById('column');
+        mySelect.addEventListener('change', handleDropdownChange);
+
+        var mySelect1 = document.getElementById('order');
+        mySelect1.addEventListener('change', handleDropdownChange);
+
+        if (selectedColumn !== "" && selectedOrder !== "") 
+        {
+            sortMovies(selectedColumn, selectedOrder);
+        } 
+        else 
+        {
+            renderMovies();
+        }
+
+        function updateMovies(newMovies) 
+        {
+            movies = newMovies;
+            if (selectedColumn !== "" && selectedOrder !== "") 
+            {
+                sortMovies(selectedColumn, selectedOrder);
+            } 
+            else 
+            {
+                renderMovies();
+            }
+        }
+</script>
+</body>

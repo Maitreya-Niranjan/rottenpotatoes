@@ -1,22 +1,48 @@
+<style>
+    #movie
+    {
+        width: 50%;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 18px;
+    }
+    #movie th, #movie td 
+    {
+        padding: 12px 15px;
+        border: 1px solid black;
+    }
+    #movie th 
+    {
+        background-color: #1a3300;
+        color: white;
+    }
+
+
+    #movie td
+    {
+        text-align: center;
+        background-color: #e6ffcc;
+    }
+</style>
+
+
 <div id="<%= dom_id movie %>">
-  <p>
-    <strong>Title:</strong>
-    <%= movie.title %>
-  </p>
-
-  <p>
-    <strong>Rating:</strong>
-    <%= movie.rating %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= movie.description %>
-  </p>
-
-  <p>
-    <strong>Release date:</strong>
-    <%= movie.release_date %>
-  </p>
+    <table id = "movie">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Rating</th>
+                <th>Description</th>
+                <th>Release Date</th>
+            </tr>
+        </thead>
+        <tbody id="mv-body">
+            <td><%= movie.title %></td>
+            <td><%= movie.rating %></td>
+            <td><%= movie.description %></td>
+            <td><%= movie.release_date %></td>
+        </tbody>
+    </table>
 
 </div>

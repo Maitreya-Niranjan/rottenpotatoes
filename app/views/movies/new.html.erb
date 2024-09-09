@@ -1,11 +1,48 @@
-<% content_for :title, "New movie" %>
+<style>
+    .test
+    {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        border: 1px solid black;
+        width: 20%;
+        background-color:  #ccff99;
+    }
 
-<h1>New movie</h1>
+        .del1
+    {
+        border: none;
+        margin: 30px;
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #194d19;
+        color: white;
+    }
 
-<%= render "form", movie: @movie %>
+    .del1:hover
+    {
+        background-color: #e0e0d1;
+    }
 
-<br>
+</style>
 
-<div>
-  <%= link_to "Back to movies", movies_path %>
+
+
+<div class = "test">
+    <% content_for :title, "New movie" %>
+
+    <h1>New movie</h1>
+
+    <%= render "form", movie: @movie %>
+
+    <br>
+
+    <div>
+    <%= link_to "Back to movies", movies_path, class: "del1" %>
+    </div>
+    <br>
 </div>

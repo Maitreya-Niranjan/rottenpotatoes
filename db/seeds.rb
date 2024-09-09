@@ -9,17 +9,26 @@
 #   end
 
 # Seed the RottenPotatoes DB with some movies.
+# Delete all existing movies before seeding new ones
+Movie.destroy_all
 more_movies = [
-  {:title => 'My Neighbor Totoro', :rating => 'G',
+    {:title => 'My Neighbor Totoro', :rating => 'G',
     :release_date => '16-Apr-1988'},
-  {:title => 'Green Book', :rating => 'PG-13',
+    {:title => 'Green Book', :rating => 'PG-13',
     :release_date => '16-Nov-2018'},
-  {:title => 'Parasite', :rating => 'R',
+    {:title => 'Parasite', :rating => 'R',
     :release_date => '30-May-2019'},
-  {:title => 'Nomadland', :rating => 'R',
+    {:title => 'Nomadland', :rating => 'R',
     :release_date => '19-Feb-2021'},
-  {:title => 'CODA', :rating => 'PG-13',
-    :release_date => '13-Aug-2021'}
+    {:title => 'CODA', :rating => 'PG-13',
+    :release_date => '13-Aug-2021'},
+    {:title => 'Kimi No Nawa', :rating => 'PG-13',
+    :release_date => '15-Aug-2016'},
+    {:title => 'Kung Fu Panda', :rating => 'PG-13',
+    :release_date => '19-Sep-2008'},
+    {:title => 'Deadpool', :rating => 'R',
+    :release_date => '12-Feb-2016'},
+
 ]
 
 more_movies.each do |movie|
