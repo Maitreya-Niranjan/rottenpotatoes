@@ -1,17 +1,16 @@
 <style>
     .main
     {
-        margin-left: 600px;
-        width: 75%;
+        
         padding: 5px;
+        border: 1px solid black;
     }
 
     .place
     {
-        margin-top:-400px;
+        margin-top: 50px;
         margin-left:100px;
-        width: 25%;       
-        margin-bottom: 20px;
+        width: 50%;       
     }
 
     #movies 
@@ -19,6 +18,7 @@
         width: 50%;
         border-collapse: collapse;
         font-size: 18px;
+
     }
     #movies th, #movies td 
     {
@@ -37,12 +37,7 @@
         text-align: center;
     }
 
-    #movies tfoot td 
-    {
-        font-weight: bold;
-        background-color: #f9f9f9;
-        padding: 10px;
-    }
+
 
     h1
     {
@@ -92,14 +87,15 @@
                 </tr>
             </thead>
             <tbody id="movies-body">
-                <!-- Movie rows will be inserted here dynamically -->
-            </tbody>
-            <tfoot>
+                <% @movies.each do |movie| %>
                 <tr>
-                    <td>Total Movies</td>
-                    <td id="total-movies">0</td>
+                    <td><%= link_to movie.title, movie %></td>
+                    <td><%= movie.rating %></td>
+                    <td><%= movie.release_date.strftime('%d %B %Y') %></td>
                 </tr>
-            </tfoot>
+                <% end %>
+
+            </tbody>
         </table>
         <br/>
 
@@ -114,7 +110,7 @@
             <option value="rating">Rating</option>
             <option value="release_date">Release Date</option>
         </select>
-
+        
         <label for="order">Choose order</label>
         <select name="order", id="order">
             <option value="" selected disabled hidden>Choose sort order</option>
@@ -138,7 +134,6 @@
     <script>
         var selectedColumn=localStorage.getItem('selectedColumn') || '';
         var selectedOrder=localStorage.getItem('selectedOrder') || '';
-        var movies = <%= raw @movies.to_json %>;
         var hash = new Object();
         hash['title'] = 'Title';
         hash['rating'] = 'Rating'
@@ -146,7 +141,7 @@
         hash['asc'] = 'Ascending';
         hash['desc'] = 'Descending';
 
-        function renderMovies() 
+        <%#function renderMovies() 
         {   
             var output = "Column selected: " + hash[selectedColumn] + "<br>Order selected: " + hash[selectedOrder];
             document.getElementById("output").innerHTML = output;
@@ -173,9 +168,9 @@
             });
             document.getElementById('total-movies').innerText = movies.length;
             colorCodeRows(selectedColumn, selectedOrder);
-        }
+        }%>
 
-        function sortMovies(column, order) 
+        <%#function sortMovies(column, order) 
         {
             movies.sort(function(a, b) 
             {
@@ -186,7 +181,7 @@
             
             renderMovies(); 
             
-        }
+        }%>
 
         function handleDropdownChange(event) 
         {
@@ -195,17 +190,15 @@
             if (event.target.id === 'column') 
             {
                 selectedColumn = selectedValue;
+                console.log(selectedColumn)
                 localStorage.setItem('selectedColumn', selectedValue);
             } else if (event.target.id === 'order') 
             {
                 selectedOrder = selectedValue;
+                console.log(selectedOrder)
                 localStorage.setItem('selectedOrder', selectedValue);
             }
-
-            if (selectedColumn !== "" && selectedOrder !== "") 
-            {
-                sortMovies(selectedColumn, selectedOrder);
-            }
+            colorCodeRows(selectedColumn, selectedOrder)
         }
 
 
@@ -214,6 +207,13 @@
             var rows = document.querySelectorAll('#movies-body tr');
             arr=["title","rating", "release_date"]
             pos = arr.indexOf(column)
+            rows.forEach(function(row) 
+            {
+                row.querySelectorAll('td').forEach(function(col) 
+                {
+                    col.classList.remove('color-asc', 'color-desc');
+                });
+            });
             rows.forEach(function(row) 
             {
                 cols = row.children[pos]
@@ -233,26 +233,6 @@
         var mySelect1 = document.getElementById('order');
         mySelect1.addEventListener('change', handleDropdownChange);
 
-        if (selectedColumn !== "" && selectedOrder !== "") 
-        {
-            sortMovies(selectedColumn, selectedOrder);
-        } 
-        else 
-        {
-            renderMovies();
-        }
-
-        function updateMovies(newMovies) 
-        {
-            movies = newMovies;
-            if (selectedColumn !== "" && selectedOrder !== "") 
-            {
-                sortMovies(selectedColumn, selectedOrder);
-            } 
-            else 
-            {
-                renderMovies();
-            }
-        }
-</script>
+        
+    </script>
 </body>
