@@ -3,7 +3,7 @@ class MoviesController < ApplicationController
 
   # GET /movies or /movies.json
   def index
-    @movies = Movie.all
+    @movies = Movie.order(order_column)
     
   end
 
@@ -67,5 +67,11 @@ class MoviesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def movie_params
       params.require(:movie).permit(:title, :rating, :description, :release_date)
+    end
+
+    def order_column
+        column = params[:column].presence || "title"  # Default column is 'title'
+        order = params[:order].presence || "asc"      # Default order is 'asc'
+        "#{column} #{order}"
     end
 end
