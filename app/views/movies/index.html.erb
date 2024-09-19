@@ -85,23 +85,6 @@
 <body>
     <div class="container">
         <div class="place">
-            <label for="column">Choose column</label>
-            <select name="column" id="column">
-                <option value="" selected disabled hidden>Choose here</option>
-                <option value="title">Title</option>
-                <option value="rating">Rating</option>
-                <option value="release_date">Release Date</option>
-            </select>
-            <br>
-            <label for="order">Choose order</label>
-            <select name="order" id="order">
-                <option value="" selected disabled hidden>Choose sort order</option>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-            <br>
-            <button id="sort-button">Sort Movies</button>
-
             <p>
                 The color for ascending order is: 
                 <span style="display: inline-block; width: 20px; height: 20px; background-color: #d4edda; border: 1px solid #000;"></span>
@@ -115,9 +98,9 @@
         <table id="movies">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Rating</th>
-                    <th>Release Date</th>
+                    <th onclick="sortTable(0)">Title</th>
+                    <th onclick="sortTable(1)">Rating</th>
+                    <th onclick="sortTable(2)">Release Date</th>
                 </tr>
             </thead>
             <tbody id="movies-body">
@@ -138,64 +121,126 @@
     </div>
 
     <script>
-        
-        function calln() {
-            var selectedColumn = localStorage.getItem('selectedColumn') || '';
-            var selectedOrder = localStorage.getItem('selectedOrder') || '';
 
-            function colorCodeRows(column, order) 
+        function sortTable(number) 
+        {
+            var selectedColumn;
+            var selectedOrder;
+            
+            if (number === 0) 
             {
-                var rows = document.querySelectorAll('#movies-body tr');
-                var arr = ["title", "rating", "release_date"];
-                var pos = arr.indexOf(column);
-
-                rows.forEach(function(row) 
+                selectedColumn = 'title';
+                var selectedOrderTitle = localStorage.getItem('selectedOrderTitle') || '';
+                selectedOrder = selectedOrderTitle;
+                if (selectedOrder === '' || selectedOrder === 'asc') 
                 {
-                    row.querySelectorAll('td').forEach(function(col) {
-                        col.classList.remove('color-asc', 'color-desc');
-                    });
-                });
-
-                if (pos !== -1) {
-                    rows.forEach(function(row) 
-                    {
-                        var cols = row.children[pos];
-                        cols.classList.remove('color-asc', 'color-desc');
-                        if (order === 'asc') {
-                            cols.classList.add('color-asc');
-                        } else if (order === 'desc') {
-                            cols.classList.add('color-desc');
-                        }
-                    });
+                    selectedOrder = 'desc';
+                    localStorage.setItem('selectedOrderTitle', 'desc');
+                } 
+                else 
+                {
+                    selectedOrder = 'asc';
+                    localStorage.setItem('selectedOrderTitle', 'asc');
+                }
+            }
+            if (number === 1) 
+            {
+                selectedColumn = 'rating';
+                var selectedOrderRating = localStorage.getItem('selectedOrderRating') || '';
+                selectedOrder = selectedOrderRating;
+                if (selectedOrder === '' || selectedOrder === 'asc') 
+                {
+                    selectedOrder = 'desc';
+                    localStorage.setItem('selectedOrderRating', 'desc');
+                } 
+                else 
+                {
+                    selectedOrder = 'asc';
+                    localStorage.setItem('selectedOrderRating', 'asc');
+                }
+            }
+            if (number === 2) 
+            {
+                selectedColumn = 'release_date';
+                var selectedOrderRd = localStorage.getItem('selectedOrderRd') || '';
+                selectedOrder = selectedOrderRd;
+                if (selectedOrder === '' || selectedOrder === 'asc') 
+                {
+                    selectedOrder = 'desc';
+                    localStorage.setItem('selectedOrderRd', 'desc');
+                } 
+                else 
+                {
+                    selectedOrder = 'asc';
+                    localStorage.setItem('selectedOrderRd', 'asc');
                 }
             }
 
-            document.getElementById('sort-button').addEventListener('click', caller);
-            function caller()
+            localStorage.setItem('selectedColumn', selectedColumn);
+            localStorage.setItem('selectedOrder', selectedOrder);
+            clik();
+    }
+
+    function colorCodeRows(column, order) 
+    {
+        var rows = document.querySelectorAll('#movies-body tr');
+        var columns = ["title", "rating", "release_date"];
+        var pos = columns.indexOf(column);
+
+        rows.forEach(function(row) 
+        {
+            row.querySelectorAll('td').forEach(function(col) 
             {
-                setval()
-                clik()
-            }
-            function setval()
+                col.classList.remove('color-asc', 'color-desc');
+            });
+        });
+
+        if (pos !== -1) 
+        {
+            rows.forEach(function(row) 
             {
-                selectedColumn = document.getElementById('column').value;
-                localStorage.setItem('selectedColumn', selectedColumn);
-                selectedOrder = document.getElementById('order').value
-                localStorage.setItem('selectedOrder', selectedOrder);
-            }
-            function clik() 
-            {
-                if (selectedColumn && selectedOrder) {
-                    var url = new URL(window.location.href);
-                    url.searchParams.set('column', selectedColumn);
-                    url.searchParams.set('order', selectedOrder);
-                    window.location.href = url.toString(); 
-                } else {
-                    alert('Please select both column and order for sorting.');
+                var cell = row.children[pos];
+                cell.classList.remove('color-asc', 'color-desc');
+                if (order === 'asc') 
+                {
+                    cell.classList.add('color-asc');
+                } 
+                else if (order === 'desc') 
+                {
+                    cell.classList.add('color-desc');
                 }
-            };
-            colorCodeRows(selectedColumn, selectedOrder);
-        };
-        calln()
+            });
+        }
+    }
+
+    function clik() 
+    {
+        var selectedColumn = localStorage.getItem('selectedColumn') || '';
+        var selectedOrder = localStorage.getItem('selectedOrder') || '';
+
+        if (selectedColumn && selectedOrder) 
+        {
+            var url = new URL(window.location.href);
+            url.searchParams.set('column', selectedColumn);
+            url.searchParams.set('order', selectedOrder);
+
+            window.location.href = url.toString();
+        }
+
+        colorCodeRows(selectedColumn, selectedOrder);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() 
+    {
+        var selectedColumn = localStorage.getItem('selectedColumn') || '';
+        var selectedOrder = localStorage.getItem('selectedOrder') || '';
+        colorCodeRows(selectedColumn, selectedOrder);
+    });
+    var selectedColumn = localStorage.getItem('selectedColumn') || '';
+    var selectedOrder = localStorage.getItem('selectedOrder') || '';
+    if (selectedColumn && selectedOrder) 
+    {
+        colorCodeRows(selectedColumn, selectedOrder);
+    }
     </script>
 </body>
