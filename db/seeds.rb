@@ -28,7 +28,16 @@ more_movies = [
     :release_date => '19-Sep-2008'},
     {:title => 'Deadpool', :rating => 'R',
     :release_date => '12-Feb-2016'},
-
+    {:title => 'Logan', :rating => 'R', 
+    :release_date => '03-Mar-2017'},
+    {:title => 'John Wick', :rating => 'R', 
+        :release_date => '24-Oct-2014'},
+    {:title => 'Mad Max: Fury Road', :rating => 'R', 
+        :release_date => '15-May-2015'},
+    {:title => 'The Revenant', :rating => 'R', 
+        :release_date => '25-Dec-2015'},
+    {:title => 'Django Unchained', :rating => 'R', 
+    :release_date => '25-Dec-2012'},
 ]
 
 more_movies.each do |movie|
