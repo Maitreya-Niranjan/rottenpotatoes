@@ -36,8 +36,6 @@ more_movies = [
         :release_date => '15-May-2015'},
     {:title => 'The Revenant', :rating => 'R', 
         :release_date => '25-Dec-2015'},
-    {:title => 'Django Unchained', :rating => 'R', 
-    :release_date => '25-Dec-2012'},
 ]
 
 more_movies.each do |movie|
