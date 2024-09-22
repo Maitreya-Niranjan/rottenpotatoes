@@ -98,9 +98,9 @@
         <table id="movies">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Title</th>
-                    <th onclick="sortTable(1)">Rating</th>
-                    <th onclick="sortTable(2)">Release Date</th>
+                    <th onclick="sortTable(0)">Title <span id="titleArrow"></span></th>
+                    <th onclick="sortTable(1)">Rating <span id="ratingArrow"></span></th>
+                    <th onclick="sortTable(2)">Release Date <span id="dateArrow"></span></th>
                 </tr>
             </thead>
             <tbody id="movies-body">
@@ -126,13 +126,28 @@
         if (selectedColumn && selectedOrder)
         {
             colorCodeRows(selectedColumn, selectedOrder);
+            setArrowForSavedState(selectedColumn, selectedOrder);
         }
-        
+        function setArrowForSavedState(column, order) 
+        {
+            if (column === 'title') 
+            {
+                setArrow('titleArrow', order);
+            } 
+            else if (column === 'rating') 
+            {
+                setArrow('ratingArrow', order);
+            } 
+            else if (column === 'release_date') 
+            {
+                setArrow('dateArrow', order);
+            }
+        }
         function sortTable(number) 
         {
             var selectedColumn;
             var selectedOrder;
-            
+            clearArrows();
             if (number === 0) 
             {
                 selectedColumn = 'title';
@@ -148,6 +163,7 @@
                     selectedOrder = 'asc';
                     localStorage.setItem('selectedOrderTitle', 'asc');
                 }
+                setArrow('titleArrow', selectedOrder);
             }
             if (number === 1) 
             {
@@ -164,6 +180,7 @@
                     selectedOrder = 'asc';
                     localStorage.setItem('selectedOrderRating', 'asc');
                 }
+                setArrow('ratingArrow', selectedOrder);
             }
             if (number === 2) 
             {
@@ -180,11 +197,32 @@
                     selectedOrder = 'asc';
                     localStorage.setItem('selectedOrderRd', 'asc');
                 }
+                setArrow('dateArrow', selectedOrder);
             }
 
             localStorage.setItem('selectedColumn', selectedColumn);
             localStorage.setItem('selectedOrder', selectedOrder);
             clik();
+        }
+
+        function setArrow(elementId, order) 
+        {
+            var arrowElement = document.getElementById(elementId);
+            if (order === 'asc') 
+            {
+                arrowElement.innerHTML = ' ↑'; 
+            } 
+            else if (order === 'desc') 
+            {
+                arrowElement.innerHTML = ' ↓';
+            }
+        }
+
+        function clearArrows() 
+        {
+            document.getElementById('titleArrow').innerHTML = '';
+            document.getElementById('ratingArrow').innerHTML = '';
+            document.getElementById('dateArrow').innerHTML = '';
         }
 
         function colorCodeRows(column, order) 
