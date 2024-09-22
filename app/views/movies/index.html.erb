@@ -121,7 +121,13 @@
     </div>
 
     <script>
-
+        var selectedColumn = localStorage.getItem('selectedColumn') || '';
+        var selectedOrder = localStorage.getItem('selectedOrder') || '';
+        if (selectedColumn && selectedOrder)
+        {
+            colorCodeRows(selectedColumn, selectedOrder);
+        }
+        
         function sortTable(number) 
         {
             var selectedColumn;
@@ -179,68 +185,56 @@
             localStorage.setItem('selectedColumn', selectedColumn);
             localStorage.setItem('selectedOrder', selectedOrder);
             clik();
-    }
+        }
 
-    function colorCodeRows(column, order) 
-    {
-        var rows = document.querySelectorAll('#movies-body tr');
-        var columns = ["title", "rating", "release_date"];
-        var pos = columns.indexOf(column);
-
-        rows.forEach(function(row) 
+        function colorCodeRows(column, order) 
         {
-            row.querySelectorAll('td').forEach(function(col) 
-            {
-                col.classList.remove('color-asc', 'color-desc');
-            });
-        });
+            var rows = document.querySelectorAll('#movies-body tr');
+            var columns = ["title", "rating", "release_date"];
+            var pos = columns.indexOf(column);
 
-        if (pos !== -1) 
-        {
             rows.forEach(function(row) 
             {
-                var cell = row.children[pos];
-                cell.classList.remove('color-asc', 'color-desc');
-                if (order === 'asc') 
+                row.querySelectorAll('td').forEach(function(col) 
                 {
-                    cell.classList.add('color-asc');
-                } 
-                else if (order === 'desc') 
-                {
-                    cell.classList.add('color-desc');
-                }
+                    col.classList.remove('color-asc', 'color-desc');
+                });
             });
+
+            if (pos !== -1) 
+            {
+                rows.forEach(function(row) 
+                {
+                    var cell = row.children[pos];
+                    cell.classList.remove('color-asc', 'color-desc');
+                    if (order === 'asc') 
+                    {
+                        cell.classList.add('color-asc');
+                    } 
+                    else if (order === 'desc') 
+                    {
+                        cell.classList.add('color-desc');
+                    }
+                });
+            }
         }
-    }
 
-    function clik() 
-    {
-        var selectedColumn = localStorage.getItem('selectedColumn') || '';
-        var selectedOrder = localStorage.getItem('selectedOrder') || '';
-
-        if (selectedColumn && selectedOrder) 
+        function clik() 
         {
-            var url = new URL(window.location.href);
-            url.searchParams.set('column', selectedColumn);
-            url.searchParams.set('order', selectedOrder);
+            var selectedColumn = localStorage.getItem('selectedColumn') || '';
+            var selectedOrder = localStorage.getItem('selectedOrder') || '';
 
-            window.location.href = url.toString();
+            if (selectedColumn && selectedOrder) 
+            {
+                var url = new URL(window.location.href);
+                url.searchParams.set('column', selectedColumn);
+                url.searchParams.set('order', selectedOrder);
+
+                window.location.href = url.toString();
+            }
+
+            colorCodeRows(selectedColumn, selectedOrder);
         }
-
-        colorCodeRows(selectedColumn, selectedOrder);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() 
-    {
-        var selectedColumn = localStorage.getItem('selectedColumn') || '';
-        var selectedOrder = localStorage.getItem('selectedOrder') || '';
-        colorCodeRows(selectedColumn, selectedOrder);
-    });
-    var selectedColumn = localStorage.getItem('selectedColumn') || '';
-    var selectedOrder = localStorage.getItem('selectedOrder') || '';
-    if (selectedColumn && selectedOrder) 
-    {
-        colorCodeRows(selectedColumn, selectedOrder);
-    }
+    
     </script>
 </body>
